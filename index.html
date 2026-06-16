@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Portfolio — 全链路设计作品集</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Inter:wght@200;300;400;500&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  color: #fff;
+  cursor: default;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Space Background ─── */
+#space-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
+/* ─── Vignette ─── */
+.vignette {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 2;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+}
+
+/* ─── Left Navigation ─── */
+#nav {
+  position: fixed; left: 0; top: 0;
+  height: 100%; width: 230px;
+  padding: 36px 24px;
+  z-index: 100;
+  display: flex; flex-direction: column;
+  background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, transparent 100%);
+}
+.nav-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 15px; font-weight: 700;
+  letter-spacing: 4px; margin-bottom: 5px;
+}
+.nav-subtitle {
+  font-size: 12px; letter-spacing: 3px;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.nav-date {
+  font-size: 12px; letter-spacing: 2px;
+  color: rgba(255,255,255,0.2); margin-bottom: 36px;
+}
+.nav-section-label {
+  font-size: 12px; letter-spacing: 3px;
+  color: rgba(255,255,255,0.2); text-transform: uppercase;
+  margin: 14px 0 6px 14px;
+  display: flex; align-items: center; gap: 7px;
+}
+.nav-section-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 15px; height: 15px; flex-shrink: 0;
+}
+.nav-section-icon svg {
+  width: 13px; height: 13px;
+  stroke: rgba(0,200,255,0.4);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.nav-items { list-style: none; margin-bottom: auto; }
+.nav-item {
+  display: flex; align-items: center;
+  padding: 9px 12px; margin-bottom: 1px;
+  font-size: 12px; letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.38);
+  cursor: pointer; transition: all 0.35s ease;
+  border-radius: 5px; position: relative;
+  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.nav-item.active { color: #fff; background: rgba(255,255,255,0.08); }
+.nav-item.active::before {
+  content: ''; width: 6px; height: 6px;
+  background: #00d4ff; border-radius: 50%;
+  margin-right: 9px; box-shadow: 0 0 8px #00d4ff; flex-shrink: 0;
+}
+.nav-item:not(.active)::before {
+  content: ''; width: 5px; height: 5px;
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 50%;
+  margin-right: 9px; flex-shrink: 0;
+}
+.nav-footer {
+  font-size: 12px; letter-spacing: 2px;
+  color: rgba(255,255,255,0.18); line-height: 1.8;
+}
+
+/* ─── Cards Viewport ─── */
+#cards-viewport {
+  position: fixed; top: 0; left: 230px; right: 0; bottom: 0;
+  z-index: 10; overflow: hidden;
+}
+
+/* ─── Project Card ─── */
+.project-card {
+  position: absolute;
+  width: 540px; height: 330px;
+  border-radius: 16px; padding: 36px;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  backface-visibility: hidden;
+  overflow: visible;
+  transition: box-shadow 0.4s ease;
+}
+.project-card .card-bg {
+  position: absolute; inset: 0; border-radius: 16px;
+  background: rgba(8,8,20,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  z-index: -1; overflow: hidden;
+}
+.project-card .card-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.75) 100%);
+  z-index: 1;
+}
+.project-card .card-bg-img {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0.35; filter: saturate(1.1);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.project-card:hover .card-bg-img { opacity: 0.5; transform: scale(1.04); }
+.project-card:hover { box-shadow: 0 0 50px rgba(0,212,255,0.12); }
+.project-card:hover .card-view { opacity: 1; transform: translateY(0); }
+
+.card-tag {
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(0,212,255,0.7); margin-bottom: 10px;
+  position: relative; z-index: 1;
+  font-family: 'Inter', sans-serif;
+}
+.card-title {
+  font-size: 26px; font-weight: 700;
+  letter-spacing: 1px; margin-bottom: 12px; line-height: 1.3;
+  position: relative; z-index: 1;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+  font-family: 'Noto Sans SC', 'Inter', sans-serif;
+}
+.card-desc {
+  font-size: 13px; font-weight: 300;
+  color: rgba(255,255,255,0.6); line-height: 1.6;
+  max-width: 400px; position: relative; z-index: 1;
+  font-family: 'Noto Sans SC', 'Inter', sans-serif;
+}
+.card-view {
+  margin-top: 20px; font-size: 12px; letter-spacing: 2.5px;
+  text-transform: uppercase; color: rgba(255,255,255,0.7);
+  opacity: 0; transform: translateY(8px);
+  transition: all 0.4s ease; position: relative; z-index: 1;
+}
+.card-view span { display: inline-block; margin-left: 8px; transition: margin-left 0.3s ease; }
+.project-card:hover .card-view span { margin-left: 14px; }
+
+/* ─── Hero Card ─── */
+.hero-card { width: 600px; height: 380px; }
+.hero-card .card-title { font-size: 32px; font-family: 'Orbitron', monospace; letter-spacing: 3px; }
+.hero-card .card-bg { background: rgba(8,8,20,0.9); border-color: rgba(255,255,255,0.12); }
+
+/* ─── Scroll Indicator ─── */
+#scroll-hint {
+  position: fixed; bottom: 36px; left: 55%;
+  transform: translateX(-50%); z-index: 50;
+  text-align: center; transition: opacity 0.6s ease;
+}
+.scroll-mouse {
+  width: 22px; height: 34px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 11px; margin: 0 auto 10px; position: relative;
+}
+.scroll-mouse::after {
+  content: ''; position: absolute; top: 7px; left: 50%;
+  transform: translateX(-50%); width: 2px; height: 6px;
+  background: rgba(255,255,255,0.6); border-radius: 1px;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; top: 7px; }
+  50% { opacity: 0.3; top: 14px; }
+}
+.scroll-text {
+  font-size: 16px; letter-spacing: 6px;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.scroll-sub {
+  font-size: 12px; letter-spacing: 4px;
+  color: rgba(255,255,255,0.2); text-transform: uppercase;
+  margin-top: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ─── Progress Bar ─── */
+#progress-bar {
+  position: fixed; right: 24px; top: 50%;
+  transform: translateY(-50%);
+  width: 2px; height: 120px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 1px; z-index: 100; overflow: hidden;
+}
+#progress-fill {
+  width: 100%; height: 0%;
+  background: linear-gradient(180deg, #00d4ff, #7c3aed);
+  border-radius: 1px; transition: height 0.3s ease;
+  box-shadow: 0 0 8px rgba(0,212,255,0.4);
+}
+
+/* ─── Detail Overlay ─── */
+#detail-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,5,0.65);
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  z-index: 500;
+  overflow-y: auto; overflow-x: hidden;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+#detail-overlay.active { opacity: 1; pointer-events: auto; }
+
+#detail-close {
+  position: fixed; top: 28px; right: 28px;
+  z-index: 600; width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  color: #fff; font-size: 18px;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0; pointer-events: none;
+}
+#detail-close.active {
+  opacity: 1; pointer-events: auto;
+}
+#detail-close:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.5);
+  transform: rotate(90deg);
+}
+
+#detail-content {
+  margin: 0 auto;
+  padding: 80px 0 120px;
+}
+
+.detail-header {
+  margin-bottom: 50px;
+  padding: 0 40px 30px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+}
+.detail-tag {
+  font-size: 12px; letter-spacing: 4px;
+  color: rgba(0,212,255,0.7); text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.detail-title {
+  font-size: 36px; font-weight: 700;
+  margin-bottom: 16px; line-height: 1.3;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.detail-desc {
+  font-size: 15px; font-weight: 300;
+  color: rgba(255,255,255,0.5); line-height: 1.7;
+  max-width: 700px; margin: 0 auto;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.detail-images { display: flex; flex-direction: column; gap: 0; max-width: 1200px; margin: 0 auto; }
+.detail-images img {
+  width: 100%; height: auto; display: block;
+  opacity: 0; transform: translateY(30px);
+  animation: detailFadeIn 0.6s ease forwards;
+}
+@keyframes detailFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Loading Screen ─── */
+#loader {
+  position: fixed; inset: 0; background: #000; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; transition: opacity 0.8s ease;
+}
+#loader.hidden { opacity: 0; pointer-events: none; }
+.loader-text {
+  font-family: 'Orbitron', monospace; font-size: 14px;
+  letter-spacing: 6px; color: rgba(255,255,255,0.6);
+  animation: loaderPulse 1.5s ease-in-out infinite;
+}
+@keyframes loaderPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+.loader-bar {
+  width: 120px; height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin-top: 20px; position: relative; overflow: hidden;
+}
+.loader-bar::after {
+  content: ''; position: absolute; width: 40%; height: 100%;
+  background: #00d4ff; animation: loaderSlide 1.2s ease-in-out infinite;
+}
+@keyframes loaderSlide { 0% { left: -40%; } 100% { left: 100%; } }
+
+/* ─── CSS Dust ─── */
+.dust {
+  position: fixed; width: 2px; height: 2px;
+  background: rgba(255,255,255,0.12); border-radius: 50%;
+  pointer-events: none; z-index: 3;
+  animation: dustFloat linear infinite;
+}
+
+/* ─── Mosaic Disintegration ─── */
+.mosaic-layer {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 2px; padding: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0; z-index: 5;
+  pointer-events: none;
+}
+.mosaic-layer.active { opacity: 1; }
+.m-tile {
+  border-radius: 2px;
+  will-change: transform, opacity;
+}
+
+/* ─── Ground Overlay (Metallic Floor) ─── */
+#ground-overlay {
+  position: fixed;
+  bottom: 0; left: 230px; right: 0;
+  height: 42%;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(8,12,22,0.45) 15%,
+    rgba(10,14,28,0.72) 40%,
+    rgba(8,11,22,0.9) 70%,
+    rgba(6,8,18,0.97) 100%
+  );
+}
+/* Metallic ambient glow (no grid - 3D grid handled by Three.js) */
+#ground-overlay::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 70%,
+    rgba(30,80,140,0.06) 0%,
+    transparent 60%
+  );
+}
+/* Metallic sheen / highlight */
+#ground-overlay::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60%;
+  background:
+    radial-gradient(ellipse at 50% 90%, rgba(60,120,180,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 100%, rgba(0,180,255,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 100%, rgba(100,60,200,0.04) 0%, transparent 40%);
+}
+
+/* ─── Card Mirror Reflection ─── */
+.project-card .card-reflection {
+  position: absolute;
+  left: 0; right: 0;
+  top: 100%;
+  height: 55%;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+  opacity: 0.35;
+  filter: blur(3px) brightness(0.4) saturate(1.1);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 40%, transparent 75%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 40%, transparent 75%);
+}
+/* Flipped reflection image via pseudo-element (avoids scaleY stacking-context issues) */
+.project-card .card-reflection::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 200%;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  transform: scaleY(-1);
+  transform-origin: center bottom;
+}
+/* Reflection metallic tint + edge highlight */
+.project-card .card-reflection::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(30,100,180,0.08) 0%,
+    transparent 50%
+  );
+  z-index: 1;
+}
+@keyframes dustFloat {
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  10% { opacity: 1; } 90% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loader">
+  <div class="loader-text">LOADING</div>
+  <div class="loader-bar"></div>
+</div>
+<div class="vignette"></div>
+
+<!-- Left Navigation -->
+<nav id="nav">
+  <div class="nav-logo">PORTFOLIO</div>
+  <div class="nav-subtitle">FULL-CHAIN DESIGN</div>
+  <div class="nav-date">作品集 2021 — 2026</div>
+
+  <div class="nav-section-label" style="margin-left:0"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="1" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="1" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="23" y2="12"/></svg></span>Overview</div>
+  <ul class="nav-items">
+    <li class="nav-item active" data-target="0">HOME</li>
+    <li class="nav-item" data-target="1" style="display:none">ABOUT</li>
+
+    <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="13" width="4" height="8" rx="1"/><rect x="10" y="5" width="4" height="16" rx="1"/><rect x="17" y="9" width="4" height="12" rx="1"/></svg></span>数据可视化</div>
+    <li class="nav-item" data-target="5">全域智治指挥大屏</li>
+    <li class="nav-item" data-target="9">行业可视化模版设计</li>
+
+    <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="5" rx="1.5"/><rect x="3" y="10" width="18" height="5" rx="1.5"/><rect x="3" y="17" width="18" height="4" rx="1.5"/></svg></span>B 端体验设计</div>
+    <li class="nav-item" data-target="6">一网统管系统设计优化</li>
+
+    <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg></span>AI 智能化解决方案</div>
+    <li class="nav-item" data-target="2">AI 服装营销SOP设计</li>
+    <li class="nav-item" data-target="3">AIGC商业宣发短片</li>
+    <li class="nav-item" data-target="4">AI 沉浸式互动教育</li>
+
+    <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><polyline points="8,4 2,12 8,20"/><polyline points="16,4 22,12 16,20"/></svg></span>设计探索</div>
+    <li class="nav-item" data-target="7">VibeCoding设计初探索</li>
+
+    <li class="nav-item" data-target="8" style="margin-top:12px">CONTACT</li>
+  </ul>
+
+  <div class="nav-footer" style="margin-top:auto">
+    SHANGHAI, CHN<br>
+    <span id="nav-time"></span>
+  </div>
+</nav>
+
+<!-- 3D Cards Viewport -->
+<div id="cards-viewport">
+  <div id="cards-track">
+
+    <!-- Card 0: HOME -->
+    <div class="project-card hero-card" data-index="0"
+         style="--x: 50%; --y: 50%; --z: 0px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/1.png');opacity:0.2;"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/1.png') center/cover no-repeat;opacity:0.15;"></div>
+      <div class="card-tag">WELCOME TO MY UNIVERSE</div>
+      <div class="card-title">CREATIVE<br>PORTFOLIO</div>
+      <div class="card-desc">全链路设计师 — 专注 AI 智能化设计、数据可视化、B端体验设计与 VibeCoding 设计探索</div>
+      <div class="card-view">SCROLL TO EXPLORE <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 1: ABOUT -->
+    <div class="project-card" data-index="1" style="display:none"
+         data-style="--x: 64%; --y: 48%; --z: -9000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/2.png');opacity:0.25;"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/2.png') center/cover no-repeat;"></div>
+      <div class="card-tag">ABOUT ME</div>
+      <div class="card-title">关于我</div>
+      <div class="card-desc">Product / UI / UX Designer，涵盖 AI 智能化解决方案、数据可视化、B端体验设计与 VibeCoding 设计探索四大领域</div>
+      <div class="card-view">VIEW PROFILE <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 2: AI营销内容生成 -->
+    <div class="project-card" data-index="2"
+         style="--x: 36%; --y: 52%; --z: -4000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/29.jpg');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/29.jpg') center/cover no-repeat;"></div>
+      <div class="card-tag">AIGC · 聚水潭 ERP</div>
+      <div class="card-title">AI 服装营销SOP设计</div>
+      <div class="card-desc">标准化生产 SOP — 为国内领先电商 SaaS 服务商打造可复用 AI 内容生成工作流</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 3: 美加净AIGC商业宣发 -->
+    <div class="project-card" data-index="3"
+         style="--x: 64%; --y: 46%; --z: -5000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/29.jpg');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/29.jpg') center/cover no-repeat;"></div>
+      <div class="card-tag">AIGC · 品牌宣发</div>
+      <div class="card-title">AIGC商业宣发短片</div>
+      <div class="card-desc">国民护肤品牌 AIGC 商业宣发短片 — 融合自然美学与 AI 生成技术</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 4: 井冈山AI沉浸式互动教育 -->
+    <div class="project-card" data-index="4"
+         style="--x: 36%; --y: 50%; --z: -6000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/29.jpg');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/29.jpg') center/cover no-repeat;"></div>
+      <div class="card-tag">AIGC · 沉浸式教育</div>
+      <div class="card-title">AI 沉浸式互动教育</div>
+      <div class="card-desc">全国首个村交互红色教育长片，入选中组部内参 — AI 沉浸式互动教育课程</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 5: 全域智治指挥大屏 -->
+    <div class="project-card" data-index="5"
+         style="--x: 64%; --y: 52%; --z: -1000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/4.jpg');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/4.jpg') center/cover no-repeat;"></div>
+      <div class="card-tag">数据可视化 · 智慧城市</div>
+      <div class="card-title">全域智治指挥大屏</div>
+      <div class="card-desc">崂山智慧社区全域治理大屏 — 3D 城市模型、实时数据可视化与交互设计</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 9: 行业可视化模版设计 -->
+    <div class="project-card" data-index="9"
+         style="--x: 36%; --y: 50%; --z: -2000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/4.jpg');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/4.jpg') center/cover no-repeat;"></div>
+      <div class="card-tag">数据可视化 · 模版设计</div>
+      <div class="card-title">行业可视化模版设计</div>
+      <div class="card-desc">行业通用可视化模版 — 标准化组件库与可视化设计规范</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 6: 宜昌一网统管 -->
+    <div class="project-card" data-index="6"
+         style="--x: 64%; --y: 48%; --z: -3000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/14.jpg');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/14.jpg') center/cover no-repeat;"></div>
+      <div class="card-tag">B 端 UX · 政务平台</div>
+      <div class="card-title">一网统管系统设计优化</div>
+      <div class="card-desc">宜接就办 — 整合综治中心、12345热线与城市监督指挥的一体化治理平台</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 7: VibeCoding -->
+    <div class="project-card" data-index="7"
+         style="--x: 64%; --y: 50%; --z: -7000px;">
+      <div class="card-bg">
+        <div class="card-bg-img" style="background-image:url('images/55.png');"></div>
+      </div>
+      <div class="card-reflection" style="background:url('images/55.png') center/cover no-repeat;"></div>
+      <div class="card-tag">设计探索 · ZERO CODE</div>
+      <div class="card-title">VibeCoding设计初探索</div>
+      <div class="card-desc">0 代码实现 · 全链路闭环 · 效率提升 90%+ — AI 驱动的设计新范式</div>
+      <div class="card-view">VIEW PROJECT <span>&rarr;</span></div>
+    </div>
+
+    <!-- Card 8: CONTACT -->
+    <div class="project-card hero-card" data-index="8"
+         style="--x: 50%; --y: 50%; --z: -8000px;">
+      <div class="card-bg" style="border-color:rgba(0,212,255,0.15);"></div>
+      <div class="card-reflection"></div>
+      <div class="card-tag">GET IN TOUCH</div>
+      <div class="card-title">LET'S CREATE<br>TOGETHER</div>
+      <div class="card-desc">期待合作 — 自由职业项目、创意合伙、全链路设计咨询</div>
+      <div class="card-view">SAY HELLO <span>&rarr;</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Ground Overlay -->
+<div id="ground-overlay"></div>
+
+<!-- Scroll Indicator -->
+<div id="scroll-hint">
+  <div class="scroll-mouse"></div>
+  <div class="scroll-text">请滑动鼠标</div>
+  <div class="scroll-sub">Scroll to Discover</div>
+</div>
+
+<!-- Progress Bar -->
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- Detail Overlay -->
+<button id="detail-close">&times;</button>
+<div id="detail-overlay">
+  <div id="detail-content"></div>
+</div>
+
+<!-- Three.js Canvas -->
+<canvas id="space-bg"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ════════════════════════════════════════════
+  //  PROJECT DATA
+  // ════════════════════════════════════════════
+  const IMG = 'images/';
+  function imgs(from, to, ext) {
+    const arr = [];
+    for (let i = from; i <= to; i++) arr.push(IMG + i + '.' + ext);
+    return arr;
+  }
+
+  const projects = [
+    { // 0: HOME
+      navName: 'HOME', tag: 'WELCOME', title: 'Creative Portfolio',
+      desc: '全链路设计师作品集 — AI智能化 · 数据可视化 · B端体验 · VibeCoding',
+      images: [], hasDetail: false
+    },
+    { // 1: ABOUT
+      navName: 'ABOUT', tag: 'ABOUT ME', title: '关于我',
+      desc: 'Product / UI / UX Designer',
+      images: [], hasDetail: false
+    },
+    { // 2: AI服装营销SOP设计
+      navName: 'AI 服装营销SOP设计', tag: 'AIGC · 服装电商',
+      title: 'AI 服装营销SOP设计',
+      desc: '为国内领先电商 SaaS 服务商打造可复用的 AI 服装营销内容生成 SOP 工作流。',
+      images: imgs(29, 37, 'jpg'), hasDetail: true
+    },
+    { // 3: AIGC商业宣发短片
+      navName: 'AIGC商业宣发短片', tag: 'AIGC · 品牌宣发',
+      title: 'AIGC商业宣发短片',
+      desc: '融合自然美学与 AI 生成技术的商业宣发短片设计。',
+      images: [IMG+'29.jpg'].concat(imgs(38, 46, 'jpg')), hasDetail: true
+    },
+    { // 4: AI沉浸式互动教育
+      navName: 'AI 沉浸式互动教育', tag: 'AIGC · 沉浸式教育',
+      title: 'AI 沉浸式互动教育',
+      desc: '全国首个沉浸式红色教育互动长片，入选中组部内参。',
+      images: [IMG+'29.jpg'].concat(imgs(47, 54, 'jpg')), hasDetail: true
+    },
+    { // 5: 全域智治
+      navName: '全域智治指挥大屏', tag: '数据可视化 · 智慧城市',
+      title: '全域智治指挥大屏',
+      desc: '3D 城市模型、人口密度分析、环境监测、事件热力图等多维度数据可视化设计。',
+      images: [IMG+'4.jpg',IMG+'5.jpg',IMG+'6.jpg',IMG+'7.jpg',IMG+'8.jpg',IMG+'9.jpg',IMG+'10.jpg',IMG+'10-1.jpg',IMG+'10-2.jpg'], hasDetail: true
+    },
+    { // 6: 一网统管系统设计优化
+      navName: '一网统管系统设计优化', tag: 'B 端 UX · 政务平台',
+      title: '一网统管系统设计优化',
+      desc: '整合综治中心、12345 政务热线与城市监督指挥中心的一体化治理平台设计优化。',
+      images: imgs(14, 28, 'jpg'), hasDetail: true
+    },
+    { // 7: VibeCoding设计初探索
+      navName: 'VibeCoding设计初探索', tag: '设计探索 · ZERO CODE',
+      title: 'VibeCoding设计初探索',
+      desc: '0 代码实现 · 全链路闭环 · 效率提升 90%+ — AI 驱动的设计新范式初探索。',
+      images: imgs(55, 59, 'jpg'), hasDetail: true
+    },
+    { // 8: CONTACT
+      navName: 'CONTACT', tag: 'GET IN TOUCH', title: "Let's Create Together",
+      desc: '期待与你合作', images: [], hasDetail: false
+    },
+    { // 9: 行业可视化模版设计
+      navName: '行业可视化模版设计', tag: '数据可视化 · 模版设计',
+      title: '行业可视化模版设计',
+      desc: '行业通用可视化模版设计 — 标准化组件库与可视化设计规范。',
+      images: [IMG+'4.jpg'].concat(imgs(11, 13, 'jpg')), hasDetail: true
+    },
+  ];
+
+  // ════════════════════════════════════════════
+  //  CONFIG
+  // ════════════════════════════════════════════
+  const CONFIG = {
+    starCount: 4000, closeStarCount: 600, nebulaCount: 35,
+    scrollSpeed: 2.8, smoothing: 0.045,
+    totalDepth: 9800, cameraFov: 68, dustCount: 15,
+  };
+
+  // ════════════════════════════════════════════
+  //  STATE
+  // ════════════════════════════════════════════
+  let scrollTarget = 0, scrollCurrent = 0;
+  let mouseX = 0, mouseY = 0;
+  let windowW = window.innerWidth, windowH = window.innerHeight;
+  let isDetailOpen = false;
+
+  // ════════════════════════════════════════════
+  //  THREE.JS SETUP
+  // ════════════════════════════════════════════
+  const canvas = document.getElementById('space-bg');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(windowW, windowH);
+  renderer.setClearColor(0x000005, 1);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000010, 0.00012);
+
+  const camera = new THREE.PerspectiveCamera(CONFIG.cameraFov, windowW / windowH, 1, 15000);
+  camera.position.set(0, 0, 100);
+
+  // ── Distant Stars ──
+  const sPos = new Float32Array(CONFIG.starCount * 3);
+  const sSize = new Float32Array(CONFIG.starCount);
+  const sCol = new Float32Array(CONFIG.starCount * 3);
+  for (let i = 0; i < CONFIG.starCount; i++) {
+    const i3 = i * 3, r = 3000 + Math.random() * 6000;
+    const th = Math.random() * Math.PI * 2;
+    const ph = Math.acos(2 * Math.random() - 1);
+    sPos[i3] = r * Math.sin(ph) * Math.cos(th);
+    sPos[i3+1] = r * Math.sin(ph) * Math.sin(th);
+    sPos[i3+2] = r * Math.cos(ph) - 4000;
+    sSize[i] = 1 + Math.random() * 3;
+    const t = 0.7 + Math.random() * 0.3;
+    sCol[i3] = t; sCol[i3+1] = t * (0.85 + Math.random()*0.15); sCol[i3+2] = 0.9 + Math.random()*0.1;
+  }
+  const sGeo = new THREE.BufferGeometry();
+  sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+  sGeo.setAttribute('aSize', new THREE.BufferAttribute(sSize, 1));
+  sGeo.setAttribute('aColor', new THREE.BufferAttribute(sCol, 3));
+
+  const starMat = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 }, uPR: { value: renderer.getPixelRatio() } },
+    vertexShader: `
+      attribute float aSize; attribute vec3 aColor;
+      varying vec3 vC; varying float vA;
+      uniform float uTime, uPR;
+      void main(){
+        vC=aColor;
+        vec4 mv=modelViewMatrix*vec4(position,1.);
+        float tw=sin(uTime*1.5+position.x*.5+position.y*.3)*.4+.6;
+        float d=-mv.z;
+        vA=tw*smoothstep(12000.,2000.,d);
+        gl_PointSize=clamp(aSize*uPR*(600./d),.5,6.);
+        gl_Position=projectionMatrix*mv;
+      }`,
+    fragmentShader: `
+      varying vec3 vC; varying float vA;
+      void main(){
+        float d=length(gl_PointCoord-.5);
+        if(d>.5)discard;
+        float a=(smoothstep(.5,.05,d)+smoothstep(.5,.25,d)*.4)*vA;
+        gl_FragColor=vec4(vC,a);
+      }`,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  });
+  const starField = new THREE.Points(sGeo, starMat);
+  scene.add(starField);
+
+  // ── Close Stars ──
+  const cPos = new Float32Array(CONFIG.closeStarCount * 3);
+  const cSz = new Float32Array(CONFIG.closeStarCount);
+  const cCol = new Float32Array(CONFIG.closeStarCount * 3);
+  for (let i = 0; i < CONFIG.closeStarCount; i++) {
+    const i3 = i * 3;
+    cPos[i3] = (Math.random()-.5)*3000;
+    cPos[i3+1] = (Math.random()-.5)*3000;
+    cPos[i3+2] = -Math.random()*CONFIG.totalDepth - 500;
+    cSz[i] = 2 + Math.random() * 5;
+    const h = Math.random();
+    if (h<.3){cCol[i3]=.6;cCol[i3+1]=.8;cCol[i3+2]=1.;}
+    else if(h<.6){cCol[i3]=1.;cCol[i3+1]=.95;cCol[i3+2]=.8;}
+    else{cCol[i3]=.9;cCol[i3+1]=.9;cCol[i3+2]=.95;}
+  }
+  const cGeo = new THREE.BufferGeometry();
+  cGeo.setAttribute('position', new THREE.BufferAttribute(cPos, 3));
+  cGeo.setAttribute('aSize', new THREE.BufferAttribute(cSz, 1));
+  cGeo.setAttribute('aColor', new THREE.BufferAttribute(cCol, 3));
+  const cStarMat = starMat.clone();
+  scene.add(new THREE.Points(cGeo, cStarMat));
+
+  // ── Nebula ──
+  const nebCols = [[.15,.05,.35],[.05,.12,.4],[.35,.05,.15],[.05,.25,.35],[.25,.08,.3],[.08,.1,.35],[.3,.05,.25],[.05,.2,.25]];
+  const nPos = new Float32Array(CONFIG.nebulaCount * 3);
+  const nSz = new Float32Array(CONFIG.nebulaCount);
+  const nCol = new Float32Array(CONFIG.nebulaCount * 3);
+  const nPh = new Float32Array(CONFIG.nebulaCount);
+  for (let i = 0; i < CONFIG.nebulaCount; i++) {
+    const i3 = i * 3;
+    nPos[i3]=(Math.random()-.5)*2500;
+    nPos[i3+1]=(Math.random()-.5)*2500;
+    nPos[i3+2]=-Math.random()*CONFIG.totalDepth;
+    nSz[i]=150+Math.random()*350;
+    const c=nebCols[Math.floor(Math.random()*nebCols.length)];
+    nCol[i3]=c[0];nCol[i3+1]=c[1];nCol[i3+2]=c[2];
+    nPh[i]=Math.random()*Math.PI*2;
+  }
+  const nGeo = new THREE.BufferGeometry();
+  nGeo.setAttribute('position', new THREE.BufferAttribute(nPos, 3));
+  nGeo.setAttribute('aSize', new THREE.BufferAttribute(nSz, 1));
+  nGeo.setAttribute('aColor', new THREE.BufferAttribute(nCol, 3));
+  nGeo.setAttribute('aPhase', new THREE.BufferAttribute(nPh, 1));
+  const nebMat = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 }, uPR: { value: renderer.getPixelRatio() } },
+    vertexShader: `
+      attribute float aSize; attribute vec3 aColor; attribute float aPhase;
+      varying vec3 vC; varying float vA;
+      uniform float uTime, uPR;
+      void main(){
+        vC=aColor;
+        float p=sin(uTime*.3+aPhase)*.15+1.;
+        vec4 mv=modelViewMatrix*vec4(position,1.);
+        float d=-mv.z;
+        vA=p*smoothstep(6000.,500.,d)*.7;
+        gl_PointSize=min(aSize*p*uPR*(400./max(d,1.)),800.);
+        gl_Position=projectionMatrix*mv;
+      }`,
+    fragmentShader: `
+      varying vec3 vC; varying float vA;
+      void main(){
+        float d=length(gl_PointCoord-.5);
+        if(d>.5)discard;
+        float a=pow(smoothstep(.5,.05,d),1.8)*vA*.45;
+        gl_FragColor=vec4(vC,a);
+      }`,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  });
+  scene.add(new THREE.Points(nGeo, nebMat));
+
+  // ── Shooting Stars ──
+  const shooters = [];
+  function spawnShooter() {
+    const pts = 20, pos = new Float32Array(pts*3), opa = new Float32Array(pts);
+    const sx=(Math.random()-.5)*2000, sy=(Math.random()-.5)*1000+400;
+    const sz=camera.position.z-500-Math.random()*2000;
+    for(let i=0;i<pts;i++){pos[i*3]=sx;pos[i*3+1]=sy;pos[i*3+2]=sz;opa[i]=1-i/pts;}
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    g.setAttribute('aOpacity',new THREE.BufferAttribute(opa,1));
+    const m=new THREE.ShaderMaterial({
+      vertexShader:`attribute float aOpacity;varying float vO;void main(){vO=aOpacity;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=mix(1.,3.,aOpacity);}`,
+      fragmentShader:`varying float vO;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;gl_FragColor=vec4(.8,.9,1.,vO*smoothstep(.5,0.,d));}`,
+      transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+    });
+    const mesh=new THREE.Points(g,m);scene.add(mesh);
+    shooters.push({mesh,g,pos,pts,life:0,max:60+Math.random()*40,
+      dx:(Math.random()-.5)*15,dy:-(3+Math.random()*5),dz:-(5+Math.random()*10)});
+  }
+  function tickShooters(){
+    if(Math.random()<.008&&shooters.length<3)spawnShooter();
+    for(let i=shooters.length-1;i>=0;i--){
+      const s=shooters[i];s.life++;
+      for(let j=s.pts-1;j>0;j--){s.pos[j*3]=s.pos[(j-1)*3];s.pos[j*3+1]=s.pos[(j-1)*3+1];s.pos[j*3+2]=s.pos[(j-1)*3+2];}
+      s.pos[0]+=s.dx;s.pos[1]+=s.dy;s.pos[2]+=s.dz;
+      s.dx*=.98;s.dy*=.98;s.dz*=.98;
+      s.g.attributes.position.needsUpdate=true;
+      if(s.life>s.max){scene.remove(s.mesh);s.g.dispose();s.mesh.material.dispose();shooters.splice(i,1);}
+    }
+  }
+  scene.add(new THREE.AmbientLight(0x111122,1));
+
+  // ── 3D Metallic Grid Floor ──
+  const groundGeo = new THREE.PlaneGeometry(20000, 14000, 1, 1);
+  const groundMat = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: `
+      varying vec3 vWorldPos;
+      void main(){
+        vWorldPos = (modelMatrix * vec4(position,1.0)).xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+      }`,
+    fragmentShader: `
+      varying vec3 vWorldPos;
+      uniform float uTime;
+      void main(){
+        vec2 coord = vWorldPos.xz;
+
+        // Fine grid (dense mesh)
+        vec2 fg = abs(fract(coord * 0.015 - 0.5) - 0.5) / fwidth(coord * 0.015);
+        float fineLine = 1.0 - min(min(fg.x, fg.y), 1.0);
+
+        // Medium grid
+        vec2 mg = abs(fract(coord * 0.005 - 0.5) - 0.5) / fwidth(coord * 0.005);
+        float medLine = 1.0 - min(min(mg.x, mg.y), 1.0);
+
+        // Coarse grid (major sections)
+        vec2 cg = abs(fract(coord * 0.001 - 0.5) - 0.5) / fwidth(coord * 0.001);
+        float coarseLine = 1.0 - min(min(cg.x, cg.y), 1.0);
+
+        // Combine grids
+        float gridVal = max(fineLine * 0.35, max(medLine * 0.7, coarseLine * 1.0));
+
+        // Distance fade
+        float dist = length(vWorldPos.xz) * 0.0001;
+        float fade = exp(-dist * dist * 2.0);
+
+        // Subtle animation
+        float pulse = sin(uTime * 0.35) * 0.06 + 0.94;
+
+        // Metallic colors
+        vec3 fineColor = vec3(0.04, 0.12, 0.22);
+        vec3 medColor = vec3(0.06, 0.2, 0.38);
+        vec3 coarseColor = vec3(0.08, 0.28, 0.5);
+        vec3 lineCol = fineColor * fineLine + medColor * medLine + coarseColor * coarseLine;
+        lineCol = min(lineCol, vec3(0.12, 0.35, 0.55)) * pulse;
+
+        // Base surface (dark metallic)
+        vec3 baseCol = vec3(0.012, 0.015, 0.025);
+
+        // Center specular highlight
+        float spec = pow(max(0.0, 1.0 - length(vWorldPos.xz) * 0.00025), 12.0) * 0.1;
+        vec3 specCol = vec3(0.12, 0.22, 0.38) * spec;
+
+        vec3 col = baseCol + lineCol * gridVal * fade + specCol * fade;
+        float alpha = gridVal * fade * 0.4 + fade * 0.2 + spec * fade * 0.5;
+
+        gl_FragColor = vec4(col, alpha);
+      }`,
+    transparent: true, side: THREE.DoubleSide, depthWrite: false,
+  });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -180;
+  ground.position.z = -4000;
+  scene.add(ground);
+
+  // ════════════════════════════════════════════
+  //  CSS DUST
+  // ════════════════════════════════════════════
+  for(let i=0;i<CONFIG.dustCount;i++){
+    const d=document.createElement('div');d.className='dust';
+    d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--dx:${(Math.random()-.5)*200}px;--dy:${(Math.random()-.5)*200}px;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
+    document.body.appendChild(d);
+  }
+
+  // ════════════════════════════════════════════
+  //  DOM REFS
+  // ════════════════════════════════════════════
+  const cardsViewport = document.getElementById('cards-viewport');
+  const scrollHint = document.getElementById('scroll-hint');
+  const progressFill = document.getElementById('progress-fill');
+  const cards = document.querySelectorAll('.project-card');
+  const navItems = document.querySelectorAll('.nav-item');
+  const detailOverlay = document.getElementById('detail-overlay');
+  const detailContent = document.getElementById('detail-content');
+  const detailClose = document.getElementById('detail-close');
+
+  // ════════════════════════════════════════════
+  //  MOSAIC DISINTEGRATION (HOME card)
+  // ════════════════════════════════════════════
+  const homeCard = document.querySelector('[data-index="0"]');
+  const mosaicLayer = document.createElement('div');
+  mosaicLayer.className = 'mosaic-layer';
+  homeCard.appendChild(mosaicLayer);
+
+  const COLS = 12, ROWS = 7;
+  const techColors = [
+    'rgba(0,212,255,0.55)','rgba(0,180,230,0.45)','rgba(100,60,220,0.4)',
+    'rgba(139,92,246,0.35)','rgba(0,255,200,0.3)','rgba(255,255,255,0.25)',
+    'rgba(20,30,60,0.6)','rgba(10,15,40,0.5)','rgba(0,150,255,0.4)',
+  ];
+  const tiles = [];
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const tile = document.createElement('div');
+      tile.className = 'm-tile';
+      tile.style.background = techColors[Math.floor(Math.random() * techColors.length)];
+      mosaicLayer.appendChild(tile);
+      tiles.push({
+        el: tile,
+        // Random scatter direction (from center outward)
+        dx: (c - COLS/2 + 0.5) * (2 + Math.random() * 4),
+        dy: (r - ROWS/2 + 0.5) * (2 + Math.random() * 4),
+        rot: (Math.random() - 0.5) * 500,
+        delay: Math.random() * 0.25,
+        scale: 0.3 + Math.random() * 0.7,
+      });
+    }
+  }
+
+  function updateMosaic() {
+    const scrollRange = 600; // effect happens over 600px of scroll
+    const p = Math.min(1, Math.max(0, scrollCurrent / scrollRange));
+
+    if (p <= 0) {
+      mosaicLayer.classList.remove('active');
+      // Reset card to normal
+      homeCard.querySelector('.card-bg').style.opacity = '';
+      homeCard.querySelectorAll('.card-tag,.card-title,.card-desc,.card-view,.card-reflection').forEach(function(el) { el.style.opacity = ''; });
+      return;
+    }
+
+    mosaicLayer.classList.add('active');
+
+    // Phase 1 (0–0.4): card scales up, grid appears
+    // Phase 2 (0.4–1.0): tiles scatter and fade
+    const scaleP = Math.min(1, p / 0.4);
+    const scatterP = Math.max(0, (p - 0.35) / 0.65);
+
+    // Scale up the entire card
+    const cardScale = 1 + scaleP * 1.0;
+    const cardOpa = 1 - p * p;
+
+    // Apply extra scale to home card via a data attribute (used by updateCards)
+    homeCard.dataset.mosaicScale = cardScale;
+    homeCard.dataset.mosaicOpa = cardOpa;
+
+    // Grid overlay visibility
+    mosaicLayer.style.opacity = Math.min(1, scaleP * 1.5);
+
+    // Fade original card content
+    const contentOpa = Math.max(0, 1 - p * 2.5);
+    homeCard.querySelector('.card-bg').style.opacity = contentOpa;
+    homeCard.querySelectorAll('.card-tag,.card-title,.card-desc,.card-view,.card-reflection').forEach(function(el) {
+      el.style.opacity = contentOpa;
+    });
+
+    // Scatter tiles
+    tiles.forEach(function(t) {
+      const tp = Math.max(0, Math.min(1, (scatterP - t.delay) / (1 - t.delay)));
+      const ease = tp * tp; // ease-in
+      const tx = t.dx * ease * 90;
+      const ty = t.dy * ease * 90;
+      const rot = t.rot * ease;
+      const s = t.scale * (1 - ease * 0.8);
+      const opa = 1 - ease;
+      t.el.style.transform = 'translate(' + tx + 'px,' + ty + 'px) rotate(' + rot + 'deg) scale(' + s + ')';
+      t.el.style.opacity = opa;
+    });
+  }
+
+  // ════════════════════════════════════════════
+  //  SCROLL
+  // ════════════════════════════════════════════
+  window.addEventListener('wheel', function(e) {
+    if (isDetailOpen) return;
+    e.preventDefault();
+    scrollTarget += e.deltaY * CONFIG.scrollSpeed;
+    scrollTarget = Math.max(0, Math.min(scrollTarget, CONFIG.totalDepth));
+  }, { passive: false });
+
+  let touchY = 0;
+  window.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchmove', function(e) {
+    if (isDetailOpen) return;
+    e.preventDefault();
+    const d = touchY - e.touches[0].clientY; touchY = e.touches[0].clientY;
+    scrollTarget += d * 4;
+    scrollTarget = Math.max(0, Math.min(scrollTarget, CONFIG.totalDepth));
+  }, { passive: false });
+
+  // ════════════════════════════════════════════
+  //  MOUSE
+  // ════════════════════════════════════════════
+  window.addEventListener('mousemove', function(e) {
+    mouseX = (e.clientX / windowW - 0.5) * 2;
+    mouseY = (e.clientY / windowH - 0.5) * 2;
+  });
+
+  // ════════════════════════════════════════════
+  //  NAV CLICK → jump to card (z-depth aligned)
+  // ════════════════════════════════════════════
+  navItems.forEach(function(item) {
+    item.addEventListener('click', function() {
+      if (isDetailOpen) return;
+      const t = parseInt(this.dataset.target);
+      const card = document.querySelector('[data-index="' + t + '"]');
+      const z = Math.abs(parseFloat(card.style.getPropertyValue('--z')));
+      // Side cards: target sc≈1.0 (card at comfortable viewing distance)
+      // HOME/CONTACT: slightly further back for overview
+      if (t === 0) { scrollTarget = 0; }
+      else if (t === 8) { scrollTarget = z - 430; }
+      else { scrollTarget = z + 100; }
+    });
+  });
+
+  function updateNav() {
+    let minDist = Infinity, activeIdx = 0;
+    cards.forEach(function(card) {
+      const z = parseFloat(card.style.getPropertyValue('--z'));
+      const relZ = z + scrollCurrent;
+      const dist = Math.abs(relZ);
+      if (dist < minDist) { minDist = dist; activeIdx = parseInt(card.dataset.index); }
+    });
+    navItems.forEach(function(item) {
+      item.classList.toggle('active', parseInt(item.dataset.target) === activeIdx);
+    });
+  }
+
+  // ════════════════════════════════════════════
+  //  CARD POSITIONING
+  // ════════════════════════════════════════════
+  function updateCards() {
+    const vw = cardsViewport.offsetWidth, vh = cardsViewport.offsetHeight;
+    cards.forEach(function(card) {
+      const z = parseFloat(card.style.getPropertyValue('--z'));
+      const xP = parseFloat(card.style.getPropertyValue('--x'));
+      const yP = parseFloat(card.style.getPropertyValue('--y'));
+      const relZ = z + scrollCurrent;
+      const camD = 800;
+      const depth = camD - relZ;
+      let sc = depth > 50 ? camD / depth : camD / 50;
+
+      // Offset from viewport center in pixels
+      const dx = (xP / 100 - 0.5) * vw;
+      const dy = (yP / 100 - 0.5) * vh;
+
+      let opa = 1;
+      if (depth < 100) opa = Math.max(0, depth / 100);
+      if (depth > 2500) opa = Math.max(0, 1 - (depth - 2500) / 1000);
+
+      const ry = -dx * sc * 0.012 + (dx > 10 ? -6 : dx < -10 ? 6 : 0);
+      const rx = dy * sc * 0.003;
+
+      // Mosaic effect override for HOME card
+      const mosaicScale = parseFloat(card.dataset.mosaicScale);
+      const mosaicOpa = parseFloat(card.dataset.mosaicOpa);
+      if (!isNaN(mosaicScale) && scrollCurrent < 800) {
+        sc = sc * mosaicScale;
+        opa = opa * mosaicOpa;
+      }
+
+      // z-index: closer cards always render in front
+      card.style.zIndex = Math.round(Math.max(0, 10000 - depth));
+
+      card.style.left = '50%';
+      card.style.top = '50%';
+      card.style.transform =
+        'translate(calc(-50% + ' + (dx * sc) + 'px), calc(-50% + ' + (dy * sc) + 'px)) ' +
+        'scale(' + Math.min(sc, 2.5) + ') ' +
+        'rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
+      card.style.opacity = Math.max(0, Math.min(1, opa));
+      card.style.pointerEvents = (opa > 0.3 && sc > 0.3) ? 'auto' : 'none';
+    });
+  }
+
+  // ════════════════════════════════════════════
+  //  DETAIL VIEW
+  // ════════════════════════════════════════════
+  function openDetail(index) {
+    const p = projects[index];
+    if (!p || !p.hasDetail || p.images.length === 0) return;
+    isDetailOpen = true;
+    let html = '<div class="detail-header">';
+    html += '<div class="detail-tag">' + p.tag + '</div>';
+    html += '<div class="detail-title">' + p.title + '</div>';
+    html += '<div class="detail-desc">' + p.desc + '</div>';
+    html += '</div><div class="detail-images">';
+    p.images.forEach(function(src, i) {
+      html += '<img src="' + src + '" alt="' + p.title + ' - Page ' + (i+1) + '" style="animation-delay:' + (i * 0.08) + 's" loading="lazy">';
+    });
+    html += '</div>';
+    detailContent.innerHTML = html;
+    detailOverlay.scrollTop = 0;
+    detailOverlay.classList.add('active');
+    detailClose.classList.add('active');
+  }
+
+  function closeDetail() {
+    isDetailOpen = false;
+    detailOverlay.classList.remove('active');
+    detailClose.classList.remove('active');
+  }
+
+  detailClose.addEventListener('click', closeDetail);
+  detailOverlay.addEventListener('click', function(e) {
+    if (e.target === detailOverlay) closeDetail();
+  });
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isDetailOpen) closeDetail();
+  });
+
+  // ════════════════════════════════════════════
+  //  CARD CLICK → open detail
+  // ════════════════════════════════════════════
+  cards.forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if (isDetailOpen) return;
+      const idx = parseInt(this.dataset.index);
+      openDetail(idx);
+    });
+  });
+
+  // ════════════════════════════════════════════
+  //  TIME
+  // ════════════════════════════════════════════
+  function updateTime() {
+    const n = new Date();
+    document.getElementById('nav-time').textContent =
+      String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+  }
+  updateTime(); setInterval(updateTime, 30000);
+
+  // ════════════════════════════════════════════
+  //  RESIZE
+  // ════════════════════════════════════════════
+  window.addEventListener('resize', function() {
+    windowW = window.innerWidth; windowH = window.innerHeight;
+    camera.aspect = windowW / windowH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(windowW, windowH);
+  });
+
+  // ════════════════════════════════════════════
+  //  ANIMATION LOOP
+  // ════════════════════════════════════════════
+  let time = 0;
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    time += dt;
+
+    if (!isDetailOpen) {
+      scrollCurrent += (scrollTarget - scrollCurrent) * CONFIG.smoothing;
+    }
+
+    const camZ = 100 - scrollCurrent * 0.12;
+    camera.position.z += (camZ - camera.position.z) * 0.06;
+    camera.position.x += (mouseX * 30 - camera.position.x) * 0.02;
+    camera.position.y += (-mouseY * 20 - camera.position.y) * 0.02;
+    camera.lookAt(camera.position.x * 0.5, camera.position.y * 0.5, camera.position.z - 500);
+
+    starMat.uniforms.uTime.value = time;
+    cStarMat.uniforms.uTime.value = time;
+    nebMat.uniforms.uTime.value = time;
+    groundMat.uniforms.uTime.value = time;
+    starField.rotation.y = time * 0.003;
+    starField.rotation.x = time * 0.001;
+
+    tickShooters();
+    renderer.render(scene, camera);
+    updateCards();
+    updateNav();
+    updateMosaic();
+
+    const prog = scrollCurrent / CONFIG.totalDepth;
+    scrollHint.style.opacity = prog < 0.03 ? 1 : 0;
+    progressFill.style.height = (prog * 100) + '%';
+  }
+
+  // ════════════════════════════════════════════
+  //  LOADER → START
+  // ════════════════════════════════════════════
+  setTimeout(function() {
+    document.getElementById('loader').classList.add('hidden');
+    setTimeout(function() { document.getElementById('loader').style.display = 'none'; }, 800);
+    animate();
+  }, 1800);
+
+})();
+</script>
+</body>
+</html>
