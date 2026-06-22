@@ -142,13 +142,13 @@ html, body {
 
 .card-tag {
   font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(0,212,255,0.7); margin-bottom: 16px;
-  position: relative; z-index: 1;
+  color: rgba(0,212,255,0.7);
+  position: absolute; top: 28px; left: 36px; z-index: 2;
   font-family: 'Inter', sans-serif;
 }
 .card-title {
   font-size: 26px; font-weight: 700;
-  letter-spacing: 1px; margin-top: 0; margin-bottom: 16px; line-height: 1.3;
+  letter-spacing: 1px; margin-top: 5px; margin-bottom: 10px; line-height: 1.3;
   position: relative; z-index: 1;
   text-shadow: 0 2px 20px rgba(0,0,0,0.6);
   font-family: 'Noto Sans SC', 'Inter', sans-serif;
@@ -460,6 +460,7 @@ html, body {
   margin-top: 2px;
 }
 
+
 </style>
 </head>
 <body>
@@ -483,14 +484,14 @@ html, body {
     <li class="nav-item" data-target="1">ABOUT</li>
 
     <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="13" width="4" height="8" rx="1"/><rect x="10" y="5" width="4" height="16" rx="1"/><rect x="17" y="9" width="4" height="12" rx="1"/></svg></span>数据可视化</div>
-    <li class="nav-item" data-target="5">全域智治指挥大屏</li>
+    <li class="nav-item" data-target="5">智慧城市指挥大屏</li>
     <li class="nav-item" data-target="9">行业可视化模版设计</li>
 
     <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="5" rx="1.5"/><rect x="3" y="10" width="18" height="5" rx="1.5"/><rect x="3" y="17" width="18" height="4" rx="1.5"/></svg></span>B 端体验设计</div>
     <li class="nav-item" data-target="6">一网统管系统设计优化</li>
 
     <div class="nav-section-label" style="margin-left:0;margin-top:18px"><span class="nav-section-icon"><svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg></span>AI 智能化解决方案</div>
-    <li class="nav-item" data-target="2">AI 服装营销SOP设计</li>
+    <li class="nav-item" data-target="2">AI 营销SOP定制</li>
     <li class="nav-item" data-target="3">AIGC商业宣发短片</li>
     <li class="nav-item" data-target="4">AI 沉浸式互动教育</li>
 
@@ -563,7 +564,7 @@ html, body {
       </div>
       <div class="card-reflection" style="background:url('images/29.webp') center/cover no-repeat;"></div>
       <div class="card-tag">AIGC · 聚水潭 ERP</div>
-      <div class="card-title">AI 服装营销SOP设计</div>
+      <div class="card-title">AI 营销SOP定制</div>
       <div class="card-desc"></div>
       <div class="card-view">点击查看项目 <span>&rarr;</span></div>
     </div>
@@ -594,7 +595,7 @@ html, body {
       <div class="card-view">点击查看项目 <span>&rarr;</span></div>
     </div>
 
-    <!-- Card 5: 全域智治指挥大屏 -->
+    <!-- Card 5: 智慧城市指挥大屏 -->
     <div class="project-card" data-index="5"
          style="--x: 64%; --y: 52%; --z: -2000px;">
       <div class="card-bg">
@@ -602,7 +603,7 @@ html, body {
       </div>
       <div class="card-reflection" style="background:url('images/4.webp') center/cover no-repeat;"></div>
       <div class="card-tag">数据可视化 · 智慧城市</div>
-      <div class="card-title">全域智治指挥大屏</div>
+      <div class="card-title">智慧城市指挥大屏</div>
       <div class="card-desc"></div>
       <div class="card-view">点击查看项目 <span>&rarr;</span></div>
     </div>
@@ -709,8 +710,8 @@ html, body {
       images: imgs(1, 3, 'webp'), hasDetail: true
     },
     { // 2: AI服装营销SOP设计
-      navName: 'AI 服装营销SOP设计', tag: 'AIGC · 服装电商',
-      title: 'AI 服装营销SOP设计',
+      navName: 'AI 营销SOP定制', tag: 'AIGC · 服装电商',
+      title: 'AI 营销SOP定制',
       desc: '为国内领先电商 SaaS 服务商打造可复用的 AI 服装营销内容生成 SOP 工作流。',
       images: imgs(29, 37, 'webp'), hasDetail: true
     },
@@ -727,8 +728,8 @@ html, body {
       images: [IMG+'29.webp'].concat(imgs(47, 54, 'webp')), hasDetail: true
     },
     { // 5: 全域智治
-      navName: '全域智治指挥大屏', tag: '数据可视化 · 智慧城市',
-      title: '全域智治指挥大屏',
+      navName: '智慧城市指挥大屏', tag: '数据可视化 · 智慧城市',
+      title: '智慧城市指挥大屏',
       desc: '3D 城市模型、人口密度分析、环境监测、事件热力图等多维度数据可视化设计。',
       images: [IMG+'4.webp',IMG+'5.webp',IMG+'6.webp',IMG+'7.webp',IMG+'8.webp',IMG+'9.webp',IMG+'10.webp',IMG+'10-1.webp',IMG+'10-2.webp'], hasDetail: true
     },
@@ -1477,7 +1478,7 @@ html, body {
 
   // Anchor point (top of viewport)
   const ANCHOR_X_OFFSET = -120; // relative to right edge — moved left per user
-  const STRAP_LEN = 120;        // natural lanyard length (px) — shortened 1/3
+  const STRAP_LEN = 80;        // natural lanyard length (px) — shortened 1/3
 
   // Physics state
   let angle = 0.05;            // pendulum angle (rad)
